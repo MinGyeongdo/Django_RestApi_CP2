@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'accounts',
+    'notice',
 ]
 
 AUTH_USER_MODEL = 'accounts.User' # 커스텀 유저를 장고에서 사용하기 위함
@@ -60,9 +61,13 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAdminUser',  # 관리자만 접근 가능
         'rest_framework.permissions.AllowAny',  # 누구나 접근 가능
     ),
+    # JWT를 통한 인증방식 사용
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT를 통한 인증방식 사용
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # 페이징 처리에 PageNumberPagination을 사용, 한 페이지 표시할 객체 수는 3개
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3,
 }
 
 REST_USE_JWT = True

@@ -19,10 +19,12 @@ from .serializers import UserSerializer
 def signup(request):
     email = request.data.get('email')
     password = request.data.get('password')
+    gender = request.data.get('gender')
     name = request.data.get('name')
 
     serializer = UserSerializer(data=request.data)
     serializer.email = email
+    serializer.gender = gender
     serializer.name = name
 
     if serializer.is_valid(raise_exception=True):
@@ -44,7 +46,7 @@ def login(request):
         return Response({'message': '아이디 또는 비밀번호가 일치하지 않습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
 
     refresh = RefreshToken.for_user(user)
-    update_last_login(None, user)
-
+    update_last_login(None, user) # 로그인시 Update
+    
     return Response({'refresh_token': str(refresh),
                      'access_token': str(refresh.access_token), }, status=status.HTTP_200_OK)
