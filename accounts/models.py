@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, name, password=None, gender=False):
+    def create_user(self, email, name, gender, password=None ):
         if not email:
             raise ValueError('이메일 입력하세요!')
         
@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, name, gender, password):
+    def create_superuser(self, email, name, password, gender):
         user = self.create_user(
             email,
             name=name,
@@ -33,17 +33,18 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     # ( db에저장될이름, 선택사항 )
-    GENDER_CHOICE = (
-        (0, 'Male'),
-        (1, 'Female'),
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
     )
     email = models.EmailField(
         verbose_name='email',
         max_length=100,
         unique=True,
     )
+    # 수정필.. Superuser 생성시에 gender입력을 요구하는데, admin은 필요없게 구현하고 싶음.
     name = models.CharField(max_length=30)
-    gender = models.BooleanField(default=False)
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
